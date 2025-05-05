@@ -4,8 +4,9 @@ import { BlobServiceClient } from "@azure/storage-blob";
 
 export async function GET(request, { params }) {
   try {
+    const resolvedParams = await params;
     // Récupérer les paramètres de l'URL
-    const path = params.path;
+    const path = resolvedParams.path;
     if (!path || path.length < 2) {
       return NextResponse.json(
         { error: "Format URL attendu: /api/blob/[containerName]/[blobPath]" },
@@ -71,32 +72,27 @@ export async function GET(request, { params }) {
 
     console.log(`[DEBUG] Contenu téléchargé: ${content.length} octets`);
 
-    // Configurer les en-têtes HTTP
+    // CORRECTION: Configuration des en-têtes HTTP pour Unity WebGL
     const headers = {
-      "Cache-Control": "no-cache",
-      "Pragma": "no-cache",
-      "Expires": "0",
       "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "GET",
-      "Access-Control-Expose-Headers": "Content-Length, Content-Type, Content-Encoding",
+      "Access-Control-Allow-Methods": "GET, OPTIONS",
+      "Access-Control-Expose-Headers": "Content-Length,Content-Type,Content-Encoding,Accept-Ranges",
       "Content-Length": content.length.toString(),
       "Accept-Ranges": "bytes",
     };
 
-    // Déterminer le type MIME
-    let contentType = "application/octet-stream"; // Type par défaut
-    
+    // Déterminer le type MIME et ajouter les headers appropriés
     if (blobPath.endsWith(".framework.js") || blobPath.endsWith(".js") || blobPath.endsWith(".loader.js")) {
-      contentType = "application/javascript";
+      headers["Content-Type"] = "application/javascript";
     } else if (blobPath.endsWith(".wasm")) {
-      contentType = "application/wasm";
+      headers["Content-Type"] = "application/wasm";
     } else if (blobPath.endsWith(".data")) {
-      contentType = "application/octet-stream";
+      headers["Content-Type"] = "application/octet-stream";
+    } else {
+      headers["Content-Type"] = "application/octet-stream";
     }
     
-    headers["Content-Type"] = contentType;
-
-    // Si le fichier est compressé, ajouter l'en-tête Content-Encoding
+    // IMPORTANT: Si le fichier est compressé, ajouter correctement l'en-tête Content-Encoding
     if (isCompressed || actualBlobPath.endsWith(".gz")) {
       headers["Content-Encoding"] = "gzip";
       console.log(`[DEBUG] Ajout en-tête: Content-Encoding: gzip`);
