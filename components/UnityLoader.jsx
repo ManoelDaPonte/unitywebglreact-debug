@@ -25,7 +25,7 @@ export default function UnityLoader({ containerName, courseId }) {
 			return `${this.baseUrl}/wisetrainer/${courseId}.data.gz`;
 		},
 		get frameworkUrl() {
-			return `${this.baseUrl}/wisetrainer/${courseId}.framework.gz`;
+			return `${this.baseUrl}/wisetrainer/${courseId}.framework.js.gz`;
 		},
 		get wasmUrl() {
 			return `${this.baseUrl}/wisetrainer/${courseId}.wasm.gz`;
