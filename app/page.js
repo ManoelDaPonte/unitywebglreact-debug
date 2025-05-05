@@ -73,8 +73,8 @@ export default function Home() {
       <div className="mt-8 p-4 border rounded-lg bg-gray-50">
         <h2 className="text-xl font-bold mb-2">Instructions</h2>
         <ol className="list-decimal pl-5 space-y-2">
-          <li>Renseignez le nom du conteneur Azure et l'ID du cours</li>
-          <li>Cliquez sur "Charger la build Unity"</li>
+          <li>Renseignez le nom du conteneur Azure et l&apos;ID du cours</li>
+          <li>Cliquez sur &quot;Charger la build Unity&quot;</li>
           <li>Observez les logs de débogage pour identifier les problèmes</li>
           <li>Vérifiez dans la console du navigateur (F12) pour plus de détails</li>
         </ol>
